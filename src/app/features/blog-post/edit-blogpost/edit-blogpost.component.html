@@ -1,0 +1,85 @@
+<div class="container">
+    <h1 class="mt-3">Edit blogpost</h1>
+    <ng-container *ngIf="model">
+        <form #form="ngForm" (ngSubmit)="onformsubmit()">
+            <div class="mt-2 mb-5">
+                <div class="mt-3">
+                    <label for="title" class="form-label">title</label>
+                    <input type="text" id="title" name="title" class="form-control" [(ngModel)]="model.title">
+                </div>
+                <div class="mt-3">
+                    <label for="urlHandle" class="form-label">Url Handle</label>
+                    <input type="text" id="urlHandle" name="urlHandle" class="form-control"
+                        [(ngModel)]="model.UrlHandle">
+                </div>
+                <div class="mt-3">
+                    <label for="shortdescription" class="form-label">short description</label>
+                    <input type="text" id="shortdescription" name="shortdescription" class="form-control"
+                        [(ngModel)]="model.shortdescription">
+                </div>
+                <div class="mt-3">
+                    <label for="content" class="form-label">content</label>
+                    <!-- <textarea name="content" id="content" class="form-control"
+                [(ngModel)]="model.content" ></textarea> -->
+                    <div class="d-flex flex-row">
+                        <div class="col-6 p-2">
+                            <textarea name="content" id="content" class="form-control"
+                                style="height: 350px;max-height: 350px;" [(ngModel)]="model.content"></textarea>
+                        </div>
+                        <div class="col-6 p-2" style="max-height: 350px; overflow-y: scroll;">
+                            <markdown [data]="model.content"></markdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label for="featuredimageurl" class="form-label">featured image url
+                        <button type="button" class="btn btn-light" (click)="openimageselector()">Select image</button>
+                    </label>
+                    <ng-container *ngIf="model.featureimageurl!==''">
+                        <div>
+                            <img [src]="model.featureimageurl" height="100" class="my-2">
+                        </div>
+                    </ng-container>
+                    <input type="text" id="featuredimageurl" name="featuredimageurl" class="form-control"
+                        [(ngModel)]="model.featureimageurl">
+                </div>
+                <div class="mt-3">
+                    <label for="publishedate" class="form-label">published date</label>
+                    <input type="date" id="publishedate" name="publishedate" class="form-control"
+                        value="{{model.publishedate}}" [ngModel]="model.publishedate | date:'yyyy-MM-dd'"
+                        (ngModelChange)="model.publishedate= $event">
+                </div>
+                <div class="mt-3">
+                    <label for="author" class="form-label">Author</label>
+                    <input type="text" id="author" name="author" class="form-control" [(ngModel)]="model.author">
+                </div>
+                <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" id="isvisible" [(ngModel)]="model.isvisible"
+                        name="isvisible">
+                    <label class="form-check-label" for="isvisible">
+                        is visible ?
+                    </label>
+                </div>
+                <div class="mt-3">
+
+                <label for="categories" class="form-label">categories</label>
+                <ng-container *ngIf="categories$ | async as categories">
+                  <select class="form-control" [(ngModel)]="selectedcategories" name="categories" id="categories" multiple>
+                    <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+                  </select>
+                </ng-container >
+              </div>
+                <div class="mt-3 d-flex">
+                    <button type="submit" class="btn btn-primary">save</button>
+                    <button type="button" class="btn btn-danger ms-3"(click)="ondelete()">Delete</button>
+                </div>
+
+            </div>
+        </form>
+    </ng-container>
+</div>
+
+<div class="images-container-modal" [ngClass]="{'d-block':isimageselectorvisible,'d-none':!isimageselectorvisible}">
+    <button type="button" class="btn btn-light" style="position: fixed;top: 10px;right: 10px;" (click)="closeimageselector()">X</button>
+<app-image-selector></app-image-selector>
+</div>
